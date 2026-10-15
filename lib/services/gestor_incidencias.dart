@@ -30,12 +30,21 @@ class GestorIncidencias {
   }
 
   Future<void> cambiarEstado(String id, String estado) async {
-    for (var i = 0; i < incidencias.length; i++) {
-      if (incidencias[i].id == id) {
-        incidencias[i].estado = estado;
-        break;
-      }
+    final incidencia = porId(id);
+    if (incidencia == null) {
+      throw StateError('No existe una incidencia con el ID $id');
     }
+
+    final estadoAnterior = incidencia.estado;
+    incidencia.estado = estado;
+    try {
+      await datos.guardar(incidencias);
+    } catch (_) {
+      incidencia.estado = estadoAnterior;
+      rethrow;
+    }
+    cantidadPendientes =
+        incidencias.where((x) => x.estado == 'Pendiente').length;
   }
 
   Future<void> crear(String titulo, String descripcion, String cliente,
