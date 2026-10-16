@@ -96,7 +96,7 @@ class _PantallaDetalleState extends State<PantallaDetalle> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
-                      value: item.estado,
+                      initialValue: item.estado,
                       decoration: const InputDecoration(
                           labelText: 'Estado actual',
                           border: OutlineInputBorder()),
@@ -108,7 +108,7 @@ class _PantallaDetalleState extends State<PantallaDetalle> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      value: item.prioridad,
+                      initialValue: item.prioridad,
                       decoration: const InputDecoration(
                         labelText: 'Prioridad',
                         border: OutlineInputBorder(),

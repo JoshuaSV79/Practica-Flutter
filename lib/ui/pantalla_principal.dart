@@ -199,7 +199,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                               Expanded(
                                 child: DropdownButtonFormField<String>(
                                   key: ValueKey('estado-$filtroEstado'),
-                                  value: filtroEstado,
+                                  initialValue: filtroEstado,
                                   isExpanded: true,
                                   decoration: const InputDecoration(
                                     labelText: 'Estado',
@@ -223,7 +223,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                               Expanded(
                                 child: DropdownButtonFormField<String>(
                                   key: ValueKey('prioridad-$filtroPrioridad'),
-                                  value: filtroPrioridad,
+                                  initialValue: filtroPrioridad,
                                   isExpanded: true,
                                   decoration: const InputDecoration(
                                     labelText: 'Prioridad',

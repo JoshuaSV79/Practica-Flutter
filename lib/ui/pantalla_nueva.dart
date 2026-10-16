@@ -84,7 +84,7 @@ class _PantallaNuevaState extends State<PantallaNueva> {
                 campo('Descripción', descripcion, lineas: 4),
                 campo('Cliente', cliente),
                 DropdownButtonFormField<String>(
-                  value: categoria,
+                  initialValue: categoria,
                   decoration: const InputDecoration(
                       labelText: 'Categoría', border: OutlineInputBorder()),
                   items: ['Software', 'Hardware', 'Redes']
@@ -96,7 +96,7 @@ class _PantallaNuevaState extends State<PantallaNueva> {
                 ),
                 const SizedBox(height: 15),
                 DropdownButtonFormField<String>(
-                  value: prioridad,
+                  initialValue: prioridad,
                   decoration: const InputDecoration(
                       labelText: 'Prioridad', border: OutlineInputBorder()),
                   items: Incidencia.prioridadesValidas
