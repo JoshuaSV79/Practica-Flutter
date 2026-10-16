@@ -13,8 +13,23 @@ class GestorIncidencias {
   }
 
   List<Incidencia> buscar(String texto) {
-    if (texto.trim().isEmpty) return incidencias;
-    return incidencias.where((x) => x.titulo.contains(texto)).toList();
+    final consulta = texto.trim().toLowerCase();
+    if (consulta.isEmpty) return incidencias;
+    return incidencias.where((x) {
+      return x.titulo.toLowerCase().contains(consulta) ||
+          x.descripcion.toLowerCase().contains(consulta);
+    }).toList();
+  }
+
+  List<Incidencia> filtrar(
+    String texto, {
+    String estado = 'Todos',
+    String prioridad = 'Todas',
+  }) {
+    return buscar(texto).where((incidencia) {
+      return (estado == 'Todos' || incidencia.estado == estado) &&
+          (prioridad == 'Todas' || incidencia.prioridad == prioridad);
+    }).toList();
   }
 
   Incidencia? porId(String id) {
@@ -47,8 +62,33 @@ class GestorIncidencias {
         incidencias.where((x) => x.estado == 'Pendiente').length;
   }
 
-  Future<void> crear(String titulo, String descripcion, String cliente,
-      String categoria) async {
+  Future<void> cambiarPrioridad(String id, String prioridad) async {
+    if (!Incidencia.prioridadesValidas.contains(prioridad)) {
+      throw ArgumentError.value(prioridad, 'prioridad', 'Prioridad no válida');
+    }
+
+    final incidencia = porId(id);
+    if (incidencia == null) {
+      throw StateError('No existe una incidencia con el ID $id');
+    }
+
+    final prioridadAnterior = incidencia.prioridad;
+    incidencia.prioridad = prioridad;
+    try {
+      await datos.guardar(incidencias);
+    } catch (_) {
+      incidencia.prioridad = prioridadAnterior;
+      rethrow;
+    }
+  }
+
+  Future<void> crear(
+      String titulo, String descripcion, String cliente, String categoria,
+      {String prioridad = 'Media'}) async {
+    if (!Incidencia.prioridadesValidas.contains(prioridad)) {
+      throw ArgumentError.value(prioridad, 'prioridad', 'Prioridad no válida');
+    }
+
     final nuevo = Incidencia(
       id: 'INC-${DateTime.now().microsecondsSinceEpoch}',
       titulo: titulo,
@@ -57,6 +97,7 @@ class GestorIncidencias {
       categoria: categoria,
       estado: 'Pendiente',
       fecha: DateTime.now().toIso8601String().split('T').first,
+      prioridad: prioridad,
     );
     incidencias.insert(0, nuevo);
     cantidadPendientes++;
